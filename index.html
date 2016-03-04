@@ -1,0 +1,39 @@
+
+
+<html>
+  <body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect('http://192.168.1.107:80');
+		socket.emit('join', {email: 'C'});
+        
+      
+		var enviar = function() {
+			var msg = document.getElementById('msg');
+			var email = document.getElementById('email');
+			socket.emit('toServer', {email: email.value, msg: msg.value});
+		};
+	  
+		socket.on('toClient', function (msg) {
+			var chat = document.getElementById('chat');
+			chat.innerHTML += msg + "<br />";
+		});
+		
+		socket.on('toClientData', function (msg) {
+			var data = document.getElementById('data');
+			data.innerHTML = msg;
+		});
+		
+		
+		
+		
+    </script>
+    <section>
+      <pre id="data"></pre>
+      <pre id="chat"></pre>
+      <input type="text" id="email" placeholder="email">
+      <input type="text" id="msg" placeholder="Digite sua mensagem">
+      <input type="button" onclick="enviar();" value="Enviar">
+    </section>
+  </body>
+</html>
