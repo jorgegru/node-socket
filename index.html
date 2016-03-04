@@ -2,21 +2,50 @@
 
 <html>
   <body>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-      var socket = io.connect('http://192.168.1.107:80');
-		socket.emit('join', {email: 'C'});
-        
-      
+	  <!-- Dependencies -->
+			<!-- Latest compiled and minified CSS -->
+			<link rel="stylesheet" href="//code.jquery.com/jquery-2.2.1.min.js" >
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="application/javascript">
+		var socket = io.connect('http://10.10.0.54:3000');
+		$(document).ready(function(){
+			$('#batepapo').hide();
+		});
+	
+		var logar = function(){
+			var senha = document.getElementById('text-senha');
+			var email = document.getElementById('text-email');
+			
+			if(email!=''){
+				socket.emit('join', {email: email.value, senha: senha.value });
+				
+				$('#myModal').modal('hide');
+				$('#batepapo').show();
+				$('#Logar').hide();
+				
+			}else{
+				alert('Preencha o seu email');
+				return false
+			}
+		};
+	
+  
 		var enviar = function() {
 			var msg = document.getElementById('msg');
-			var email = document.getElementById('email');
-			socket.emit('toServer', {email: email.value, msg: msg.value});
+			var id_usuario = document.getElementById('id_usuario');
+			socket.emit('toServer', {id_usuario: id_usuario.innerHTML, msg: msg.value});
 		};
 	  
 		socket.on('toClient', function (msg) {
 			var chat = document.getElementById('chat');
-			chat.innerHTML += msg + "<br />";
+			chat.innerHTML += msg.id_usuario+" :: " + msg.msg + "<br />";
 		});
 		
 		socket.on('toClientData', function (msg) {
@@ -25,15 +54,186 @@
 		});
 		
 		
+		socket.on('toLogin', function (msg) {
+			<!-- var data = document.getElementById('data');
+			
+			$('#myModal').modal('show');
+			$('#Logar').show();
+			$('#batepapo').hide();
+		});
 		
+		
+		socket.on('toList', function (msg) {
+			<!-- var data = document.getElementById('data');
+			<!-- var button = ''; -->
+			$('#listaNome option').remove();
+			for (i = 0; i < msg.length; i++) { 
+				<!-- button +=  msg[i].socket + ' - ' +msg[i].nome +"<br/>"; -->
+				$("#listaNome").append('<option value="'+msg[i].socket+'">'+ msg[i].nome +'</option>');
+				<!-- console.log(msg[i].nome); -->
+			}
+			
+			//var el = document.getElementById('id_usuario');
+			//el.innerHTML = button;
+		});
+		
+		var selecionaUser = function(){
+			var rs = $("#listaNome").val();
+			var el = document.getElementById('id_usuario');
+			el.innerHTML = rs;
+		}
 		
     </script>
-    <section>
+	
+	 <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+
+                </a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#">Sobre</a>
+                    </li>
+                    <li>
+                        <a href="#">Services</a>
+                    </li>
+                    <li>
+                        <a href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+	
+	
+	
+	
+	
+	
+	
+	<section id="batepapo">
+		<div class="row">
+				<div class="col-lg-12">
+					<div class="well text-center">
+						TESSSSST
+					</div>
+				</div>
+				<!-- /.col-lg-12 -->
+			</div>
+	
+	
+		 <!-- Page Content -->
+		<div class="container">
+
+			<!-- Heading Row -->
+			<div class="row">
+				<div class="col-md-8">
+					
+					<pre id="chat" style="height: 248px; overflow-y: auto;"></pre>
+					
+					
+				</div>
+				<!-- /.col-md-8 -->
+				<div class="col-md-4">
+					
+					
+					<select  name="listaNome" id="listaNome" multiple="" class="form-control" onclick="selecionaUser()" style="height: 248px;">
+						
+					</select>
+					<pre id="id_usuario">
+					</pre>
+				</div>
+				<!-- /.col-md-4 -->
+			</div>
+			<!-- /.row -->
+
+			<hr>
+
+			<!-- Call to Action Well -->
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="well text-center">
+						
+						<textarea type="text" id="msg" class="form-control" onkeypress="if(event.keyCode == 13){enviar();}" type="text" name="data2" id="data2" class="form-control" dataplaceholder="Digite sua mensagem"></textarea>
+						<input type="button" class="btn btn-primary" onclick="enviar();" value="Enviar">
+						
+					</div>
+				</div>
+				<!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+
+		
+		</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    
+	
+		<!-- Small modal -->
+	
       <pre id="data"></pre>
-      <pre id="chat"></pre>
+      
+      
       <input type="text" id="email" placeholder="email">
       <input type="text" id="msg" placeholder="Digite sua mensagem">
       <input type="button" onclick="enviar();" value="Enviar">
+
     </section>
+	
+		<section id="Logar">
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Logar</button>
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="exampleModalLabel">Logar</h4>
+				  </div>
+				  <div class="modal-body">
+					<form>
+					  <div class="form-group">
+						<label for="recipient-name" class="control-label">Nome:</label>
+						<input type="text" class="form-control" id="text-email">
+					  </div>
+					  <div class="form-group">
+						<label for="message-text" class="control-label">Senha:</label>
+						<input type="password" class="form-control" id="text-senha"></textarea>
+					  </div>
+					</form>
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+					<button type="button" class="btn btn-primary" id="btn-logar" onclick="logar();">Logar</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+		</section>
   </body>
 </html>
