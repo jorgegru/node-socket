@@ -41,6 +41,7 @@
 			var msg = document.getElementById('msg');
 			var id_usuario = document.getElementById('id_usuario');
 			socket.emit('toServer', {id_usuario: id_usuario.innerHTML, msg: msg.value});
+			msg.value="";
 		};
 	  
 		socket.on('toClient', function (msg) {
